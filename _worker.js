@@ -2608,7 +2608,7 @@ async function 读取config_JSON(env, hostname, userID, UA = "Mozilla/5.0", 重�
 			TOKEN: await MD5MD5(hostname + userID),
 		},
 		订阅转换配置: {
-			SUBAPI: "https://SUBAPI.cmliussss.net",
+			SUBAPI: "https://subapi.trueheart.cc",
 			SUBCONFIG: "https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/config/ACL4SSR_Online_Mini_MultiMode_CF.ini",
 			SUBEMOJI: false,
 		},
