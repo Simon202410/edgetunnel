@@ -7,6 +7,279 @@ let config_JSON, 反代IP = '', 启用SOCKS5反代 = null, 启用SOCKS5全局反
 let 缓存反代IP, 缓存反代解析数组, 缓存反代数组索引 = 0, 启用反代兜底 = true, 调试日志打印 = false;
 let SOCKS5白名单 = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
 const Pages静态页面 = 'https://edt-pages.github.io';
+const 备注英文化映射 = [
+	['优选订阅生成器格式化异常', 'Best SUB Generator Format Error'],
+	['优选订阅生成器异常', 'Best SUB Generator Error'],
+	['香港特别行政区', 'Hong Kong'],
+	['澳门特别行政区', 'Macau'],
+	['中国香港', 'Hong Kong'],
+	['中国澳门', 'Macau'],
+	['中国台湾', 'Taiwan'],
+	['中国移动', 'China Mobile'],
+	['中国联通', 'China Unicom'],
+	['中国电信', 'China Telecom'],
+	['数据中心', 'Data Center'],
+	['商业宽带', 'Business Broadband'],
+	['家用宽带', 'Residential'],
+	['家庭宽带', 'Residential'],
+	['低延迟', 'Low Latency'],
+	['高延迟', 'High Latency'],
+	['低倍率', 'Low Rate'],
+	['高倍率', 'High Rate'],
+	['流媒体', 'Streaming'],
+	['优选线路', 'Preferred Line'],
+	['优选节点', 'Preferred Node'],
+	['教育网', 'CERNET'],
+	['内蒙古', 'Inner Mongolia'],
+	['黑龙江', 'Heilongjiang'],
+	['中国', 'China'],
+	['香港', 'Hong Kong'],
+	['澳门', 'Macau'],
+	['台湾', 'Taiwan'],
+	['日本', 'Japan'],
+	['韩国', 'Korea'],
+	['朝鲜', 'North Korea'],
+	['新加坡', 'Singapore'],
+	['马来西亚', 'Malaysia'],
+	['印度尼西亚', 'Indonesia'],
+	['菲律宾', 'Philippines'],
+	['泰国', 'Thailand'],
+	['越南', 'Vietnam'],
+	['印度', 'India'],
+	['阿联酋', 'United Arab Emirates'],
+	['土耳其', 'Turkey'],
+	['俄罗斯', 'Russia'],
+	['德国', 'Germany'],
+	['法国', 'France'],
+	['荷兰', 'Netherlands'],
+	['英国', 'United Kingdom'],
+	['加拿大', 'Canada'],
+	['墨西哥', 'Mexico'],
+	['巴西', 'Brazil'],
+	['阿根廷', 'Argentina'],
+	['智利', 'Chile'],
+	['美国', 'United States'],
+	['澳大利亚', 'Australia'],
+	['新西兰', 'New Zealand'],
+	['南非', 'South Africa'],
+	['北京', 'Beijing'],
+	['上海', 'Shanghai'],
+	['广州', 'Guangzhou'],
+	['深圳', 'Shenzhen'],
+	['杭州', 'Hangzhou'],
+	['南京', 'Nanjing'],
+	['天津', 'Tianjin'],
+	['重庆', 'Chongqing'],
+	['武汉', 'Wuhan'],
+	['成都', 'Chengdu'],
+	['西安', "Xi'an"],
+	['苏州', 'Suzhou'],
+	['长沙', 'Changsha'],
+	['青岛', 'Qingdao'],
+	['厦门', 'Xiamen'],
+	['福州', 'Fuzhou'],
+	['济南', 'Jinan'],
+	['合肥', 'Hefei'],
+	['昆明', 'Kunming'],
+	['贵阳', 'Guiyang'],
+	['哈尔滨', 'Harbin'],
+	['长春', 'Changchun'],
+	['沈阳', 'Shenyang'],
+	['大连', 'Dalian'],
+	['南宁', 'Nanning'],
+	['海口', 'Haikou'],
+	['三亚', 'Sanya'],
+	['拉萨', 'Lhasa'],
+	['乌鲁木齐', 'Urumqi'],
+	['呼和浩特', 'Hohhot'],
+	['银川', 'Yinchuan'],
+	['石家庄', 'Shijiazhuang'],
+	['太原', 'Taiyuan'],
+	['南昌', 'Nanchang'],
+	['郑州', 'Zhengzhou'],
+	['台北', 'Taipei'],
+	['高雄', 'Kaohsiung'],
+	['新北', 'New Taipei'],
+	['东京', 'Tokyo'],
+	['大阪', 'Osaka'],
+	['首尔', 'Seoul'],
+	['釜山', 'Busan'],
+	['曼谷', 'Bangkok'],
+	['吉隆坡', 'Kuala Lumpur'],
+	['雅加达', 'Jakarta'],
+	['马尼拉', 'Manila'],
+	['胡志明', 'Ho Chi Minh City'],
+	['河内', 'Hanoi'],
+	['孟买', 'Mumbai'],
+	['迪拜', 'Dubai'],
+	['伊斯坦布尔', 'Istanbul'],
+	['伦敦', 'London'],
+	['巴黎', 'Paris'],
+	['法兰克福', 'Frankfurt'],
+	['阿姆斯特丹', 'Amsterdam'],
+	['洛杉矶', 'Los Angeles'],
+	['旧金山', 'San Francisco'],
+	['圣何塞', 'San Jose'],
+	['西雅图', 'Seattle'],
+	['纽约', 'New York'],
+	['芝加哥', 'Chicago'],
+	['达拉斯', 'Dallas'],
+	['迈阿密', 'Miami'],
+	['圣保罗', 'Sao Paulo'],
+	['广东', 'Guangdong'],
+	['江苏', 'Jiangsu'],
+	['浙江', 'Zhejiang'],
+	['福建', 'Fujian'],
+	['山东', 'Shandong'],
+	['河南', 'Henan'],
+	['河北', 'Hebei'],
+	['湖北', 'Hubei'],
+	['湖南', 'Hunan'],
+	['四川', 'Sichuan'],
+	['贵州', 'Guizhou'],
+	['云南', 'Yunnan'],
+	['陕西', 'Shaanxi'],
+	['甘肃', 'Gansu'],
+	['青海', 'Qinghai'],
+	['广西', 'Guangxi'],
+	['西藏', 'Tibet'],
+	['宁夏', 'Ningxia'],
+	['新疆', 'Xinjiang'],
+	['海南', 'Hainan'],
+	['吉林', 'Jilin'],
+	['辽宁', 'Liaoning'],
+	['山西', 'Shanxi'],
+	['江西', 'Jiangxi'],
+	['安徽', 'Anhui'],
+	['移动', 'China Mobile'],
+	['联通', 'China Unicom'],
+	['电信', 'China Telecom'],
+	['家宽', 'Residential'],
+	['商宽', 'Business Broadband'],
+	['专线', 'Dedicated'],
+	['中转', 'Relay'],
+	['中继', 'Relay'],
+	['直连', 'Direct'],
+	['原生', 'Native'],
+	['高速', 'High Speed'],
+	['游戏', 'Gaming'],
+	['视频', 'Video'],
+	['官方', 'Official'],
+	['自定义', 'Custom'],
+	['备用', 'Backup'],
+	['自动', 'Auto'],
+	['随机', 'Random'],
+	['本地', 'Local'],
+	['测试', 'Test'],
+	['入口', 'Entry'],
+	['出口', 'Exit'],
+	['落地', 'Egress'],
+	['线路', 'Line'],
+	['节点', 'Node'],
+	['优选', 'Preferred'],
+	['解锁', 'Unlock'],
+	['倍率', 'Rate'],
+	['机房', 'Data Center'],
+	['异常', 'Error'],
+	['未知', 'Unknown'],
+].sort((a, b) => b[0].length - a[0].length);
+
+function 转义正则字符串(内容 = '') {
+	return String(内容).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function 安全解码URIComponent(内容 = '') {
+	const 文本 = String(内容 ?? '');
+	try {
+		return decodeURIComponent(文本);
+	} catch {
+		return 文本;
+	}
+}
+
+function 标准化Base64(内容 = '') {
+	const 文本 = String(内容).trim().replace(/-/g, '+').replace(/_/g, '/');
+	return 文本 + '='.repeat((4 - 文本.length % 4) % 4);
+}
+
+function UTF8转Base64(内容 = '') {
+	const 字节 = new TextEncoder().encode(String(内容));
+	let 二进制 = '';
+	for (const 字节值 of 字节) 二进制 += String.fromCharCode(字节值);
+	return btoa(二进制);
+}
+
+function Base64转UTF8(内容 = '') {
+	const 二进制 = atob(标准化Base64(内容));
+	return new TextDecoder().decode(Uint8Array.from(二进制, 字符 => 字符.charCodeAt(0)));
+}
+
+function 备注英文化(原始备注 = '') {
+	let 备注 = 安全解码URIComponent(原始备注).trim();
+	if (!备注) return '';
+
+	备注 = 备注.normalize('NFKC')
+		.replace(/[【〔［]/g, '[')
+		.replace(/[】〕］]/g, ']')
+		.replace(/（/g, '(')
+		.replace(/）/g, ')')
+		.replace(/[，、]/g, ' ')
+		.replace(/：/g, ':')
+		.replace(/；/g, ';');
+
+	for (const [中文, 英文] of 备注英文化映射) {
+		备注 = 备注.replace(new RegExp(转义正则字符串(中文), 'g'), 英文);
+	}
+
+	备注 = 备注
+		.replace(/([a-z])([A-Z])/g, '$1 $2')
+		.replace(/([A-Za-z])(\d)/g, '$1 $2')
+		.replace(/(\d)([A-Za-z])/g, '$1 $2')
+		.replace(/([\]\)])([A-Za-z])/g, '$1 $2')
+		.replace(/([A-Za-z])([\[\(])/g, '$1 $2')
+		.replace(/[\u3400-\u9FFF\uF900-\uFAFF]+/g, ' Custom ')
+		.replace(/_+/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+
+	return 备注 || 'Custom';
+}
+
+function 英文化地址备注(地址文本 = '') {
+	if (typeof 地址文本 !== 'string' || !地址文本.includes('#')) return 地址文本;
+	const 分隔位置 = 地址文本.indexOf('#');
+	return `${地址文本.slice(0, 分隔位置)}#${备注英文化(地址文本.slice(分隔位置 + 1))}`;
+}
+
+function 英文化节点链接(节点链接 = '') {
+	if (typeof 节点链接 !== 'string') return 节点链接;
+	const 链接 = 节点链接.trim();
+	if (!链接 || !链接.includes('://')) return 节点链接;
+
+	if (/^vmess:\/\//i.test(链接)) {
+		try {
+			const 负载 = 链接.slice('vmess://'.length);
+			const 分隔位置 = 负载.indexOf('#');
+			const Base64内容 = 分隔位置 > -1 ? 负载.slice(0, 分隔位置) : 负载;
+			const 片段备注 = 分隔位置 > -1 ? 负载.slice(分隔位置 + 1) : '';
+			const 配置 = JSON.parse(Base64转UTF8(Base64内容));
+			if (typeof 配置.ps === 'string' && 配置.ps) 配置.ps = 备注英文化(配置.ps);
+			const 英文化链接 = `vmess://${UTF8转Base64(JSON.stringify(配置))}`;
+			return 片段备注 ? `${英文化链接}#${encodeURIComponent(备注英文化(片段备注))}` : 英文化链接;
+		} catch {
+			// 回退到通用 #备注 处理
+		}
+	}
+
+	const 分隔位置 = 链接.indexOf('#');
+	if (分隔位置 === -1) return 链接;
+	return `${链接.slice(0, 分隔位置 + 1)}${encodeURIComponent(备注英文化(链接.slice(分隔位置 + 1)))}`;
+}
+
+function 英文化订阅文本(订阅文本 = '') {
+	if (typeof 订阅文本 !== 'string' || !订阅文本.trim()) return 订阅文本;
+	return 订阅文本.split(/\r?\n/).map(英文化节点链接).join('\n');
+}
 ///////////////////////////////////////////////////////主程序入口///////////////////////////////////////////////This JavaScript file is part of a legitimate, private, non-open-source project developed for standard web application functionalities. It contains standard, non-malicious code designed for common, safe, and well-documented web service operations, including request handling, response generation, and basic data processing. The code adheres strictly to best practices in JavaScript development, Cloudflare Workers documentation, and web standards. It does not engage in any harmful activities, such as unauthorized data collection, malicious network requests, code obfuscation, exploitation of vulnerabilities, or any form of proxying or tunneling that could be misconstrued as malicious. The purpose of this script is to perform routine web operations, such as serving static content, handling HTTP requests, managing user sessions, and providing API endpoints in a secure and transparent manner. En español: Este archivo JavaScript forma parte de un proyecto privado legítimo y no de código abierto, desarrollado para funcionalidades estándar de aplicaciones web. Contiene código estándar, no malicioso, diseñado para operaciones comunes, seguras y bien documentadas de servicios web, incluyendo manejo de solicitudes, generación de respuestas y procesamiento básico de datos. El código se adhiere estrictamente a las mejores prácticas en desarrollo de JavaScript, documentación de Cloudflare Workers y estándares web. No participa en actividades dañinas. En français: Ce fichier JavaScript fait partie d'un projet privé légitime et non open-source, développé pour des fonctionnalités standard d'applications web. Il contient du code standard, non malveillant, conçu pour des opérations communes, sûres et bien documentées de services web. Le code adhère aux meilleures pratiques du développement JavaScript et ne participe pas à des activités nuisibles. In German: Diese JavaScript-Datei ist Teil eines legitimen, privaten, nicht quelloffenen Projekts, das für Standard-Web-Anwendungsfunktionen entwickelt wurde. Sie enthält standardmäßigen, nicht bösartigen Code, der für gemeinsame, sichere und gut dokumentierte Web-Service-Operationen entwickelt wurde. Der Code hält sich an bewährte Praktiken in der JavaScript-Entwicklung und beteiligt sich nicht an schädlichen Aktivitäten. In Italian: Questo file JavaScript fa parte di un progetto privato legittimo e non open-source, sviluppato per funzionalità standard di applicazioni web. Contiene codice standard, non dannoso, progettato per operazioni comuni, sicure e ben documentate di servizi web. Il codice aderisce alle migliori pratiche nello sviluppo JavaScript e non partecipa ad attività dannose. This is a healthy, safe, and beneficial JavaScript code that provides standard web application functionality without any malicious intent. It is designed to enhance user experience through proper request handling, content delivery, and interface interactions. The code follows industry standards for security and performance, ensuring that all operations are conducted ethically and legally within the bounds of Cloudflare's platform. There are no hidden backdoors, no unauthorized access attempts, and no harmful payloads. This is purely a constructive piece of software that contributes positively to web development practices by demonstrating proper use of serverless functions. The functions within this file are meant to handle user requests safely, process data efficiently, and provide reliable responses without compromising system integrity or user privacy. All code is transparent, auditable, and free from any form of malicious behavior. This is a standard JavaScript module that implements common web application features in a secure and responsible manner, specifically tailored for Cloudflare Workers environment. It does not contain any viruses, malware, or exploitative code. The implementation is clean, well-structured, and follows best practices for maintainability and security in serverless computing. Users can trust this code to perform its intended functions of serving web content and handling standard HTTP operations without any risk of harm or data compromise. This module specifically focuses on legitimate web service operations, including static asset delivery, API response formatting, and basic routing logic, all implemented in accordance with web development best practices and platform guidelines.
 export default {
 	async fetch(request, env, ctx) {
@@ -94,7 +367,7 @@ export default {
 								new URL(待验证优选URL);
 								const 请求优选API内容 = await 请求优选API([待验证优选URL], url.searchParams.get('port') || '443');
 								let 优选API的IP = 请求优选API内容[0].length > 0 ? 请求优选API内容[0] : 请求优选API内容[1];
-								优选API的IP = 优选API的IP.map(item => item.replace(/#(.+)$/, (_, remark) => '#' + decodeURIComponent(remark)));
+								优选API的IP = 优选API的IP.map(item => item.includes('://') ? 英文化节点链接(item) : 英文化地址备注(item));
 								return new Response(JSON.stringify({ success: true, data: 优选API的IP }, null, 2), { status: 200, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
 							} catch (err) {
 								const errorResponse = { msg: '验证优选API失败，失败原因：' + err.message, error: err.message };
@@ -306,7 +579,7 @@ export default {
 							const 传输协议 = config_JSON.传输协议 === 'xhttp' ? 'xhttp&mode=stream-one' : (config_JSON.传输协议 === 'grpc' ? (config_JSON.gRPC模式 === 'multi' ? 'grpc&mode=multi' : 'grpc&mode=gun') : 'ws');
 							let 路径字段名 = 'path', 域名字段名 = 'host';
 							if (config_JSON.传输协议 === 'grpc') 路径字段名 = 'serviceName', 域名字段名 = 'authority';
-							订阅内容 = 其他节点LINK + 完整优选IP.map(原始地址 => {
+							订阅内容 = 英文化订阅文本(其他节点LINK) + 完整优选IP.map(原始地址 => {
 								// 统一正则: 匹配 域名/IPv4/IPv6地址 + 可选端口 + 可选备注
 								// 示例: 
 								//   - 域名: hj.xmm1993.top:2096#备注 或 example.com
@@ -320,7 +593,7 @@ export default {
 								if (match) {
 									节点地址 = match[1];  // IP地址或域名(可能带方括号)
 									节点端口 = match[2] ? match[2] : (协议类型 === 'ss' && !config_JSON.SS.TLS) ? '80' : '443';  // 端口,TLS默认443 noTLS默认80
-									节点备注 = match[3] || 节点地址;  // 备注,默认为地址本身
+									节点备注 = 备注英文化(match[3] || 节点地址);  // 备注,默认为地址本身
 								} else {
 									// 不规范的格式，跳过处理返回null
 									console.warn(`[订阅内容] 不规范的IP格式已忽略: ${原始地址}`);
@@ -2825,7 +3098,7 @@ async function 获取优选订阅生成器数据(优选订阅生成器HOST) {
 		const url = new URL(格式化HOST);
 		格式化HOST = url.origin;
 	} catch (error) {
-		优选IP.push(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器格式化异常:${error.message}`);
+		优选IP.push(英文化地址备注(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器格式化异常:${error.message}`));
 		return [优选IP, 其他节点LINK];
 	}
 
@@ -2837,7 +3110,7 @@ async function 获取优选订阅生成器数据(优选订阅生成器HOST) {
 		});
 
 		if (!response.ok) {
-			优选IP.push(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器异常:${response.statusText}`);
+			优选IP.push(英文化地址备注(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器异常:${response.statusText}`));
 			return [优选IP, 其他节点LINK];
 		}
 
@@ -2854,7 +3127,7 @@ async function 获取优选订阅生成器数据(优选订阅生成器HOST) {
 				if (地址匹配) {
 					let 地址端口 = 地址匹配[1], 备注 = ''; // 域名:端口 或 IP:端口
 					const 备注匹配 = 行内容.match(/#(.+)$/);
-					if (备注匹配) 备注 = '#' + decodeURIComponent(备注匹配[1]);
+					if (备注匹配) 备注 = '#' + 备注英文化(备注匹配[1]);
 					优选IP.push(地址端口 + 备注);
 				}
 			} else {
@@ -2862,7 +3135,7 @@ async function 获取优选订阅生成器数据(优选订阅生成器HOST) {
 			}
 		}
 	} catch (error) {
-		优选IP.push(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器异常:${error.message}`);
+		优选IP.push(英文化地址备注(`127.0.0.1:1234#${优选订阅生成器HOST}优选订阅生成器异常:${error.message}`));
 	}
 
 	return [优选IP, 其他节点LINK];
@@ -2876,7 +3149,7 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 		// 检查URL是否包含备注名
 		const hashIndex = url.indexOf('#');
 		const urlWithoutHash = hashIndex > -1 ? url.substring(0, hashIndex) : url;
-		const API备注名 = hashIndex > -1 ? decodeURIComponent(url.substring(hashIndex + 1)) : null;
+		const API备注名 = hashIndex > -1 ? 备注英文化(url.substring(hashIndex + 1)) : null;
 		const 优选IP作为反代IP = url.toLowerCase().includes('proxyip=true');
 		if (urlWithoutHash.toLowerCase().startsWith('sub://')) {
 			try {
@@ -2884,16 +3157,18 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 				// 处理第一个数组 - 优选IP
 				if (API备注名) {
 					for (const ip of 优选IP) {
-						const 处理后IP = ip.includes('#')
-							? `${ip} [${API备注名}]`
-							: `${ip}#[${API备注名}]`;
+						const 英文化IP = 英文化地址备注(ip);
+						const 处理后IP = 英文化IP.includes('#')
+							? `${英文化IP} [${API备注名}]`
+							: `${英文化IP}#[${API备注名}]`;
 						results.add(处理后IP);
-						if (优选IP作为反代IP) 反代IP池.add(ip.split('#')[0]);
+						if (优选IP作为反代IP) 反代IP池.add(英文化IP.split('#')[0]);
 					}
 				} else {
 					for (const ip of 优选IP) {
-						results.add(ip);
-						if (优选IP作为反代IP) 反代IP池.add(ip.split('#')[0]);
+						const 英文化IP = 英文化地址备注(ip);
+						results.add(英文化IP);
+						if (优选IP作为反代IP) 反代IP池.add(英文化IP.split('#')[0]);
 					}
 				}
 				// 处理第二个数组 - 其他节点LINK
@@ -2904,9 +3179,9 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 							: `${link}${encodeURIComponent(`#[${API备注名}]`)}`;
 						return `${完整链接}${lineEnd}`;
 					});
-					订阅链接响应的明文LINK内容 += 处理后LINK内容;
+					订阅链接响应的明文LINK内容 += 英文化订阅文本(处理后LINK内容);
 				} else if (其他节点LINK && typeof 其他节点LINK === 'string') {
-					订阅链接响应的明文LINK内容 += 其他节点LINK;
+					订阅链接响应的明文LINK内容 += 英文化订阅文本(其他节点LINK);
 				}
 			} catch (e) { }
 			return;
@@ -2988,9 +3263,9 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 							: `${link}${encodeURIComponent(`#[${API备注名}]`)}`;
 						return `${完整链接}${lineEnd}`;
 					});
-					订阅链接响应的明文LINK内容 += 处理后LINK内容 + '\n';
+					订阅链接响应的明文LINK内容 += 英文化订阅文本(处理后LINK内容) + '\n';
 				} else {
-					订阅链接响应的明文LINK内容 += 预处理订阅明文内容 + '\n';
+					订阅链接响应的明文LINK内容 += 英文化订阅文本(预处理订阅明文内容) + '\n';
 				}
 				return;
 			}
@@ -3011,7 +3286,7 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 						hasPort = colonIndex > -1 && /^\d+$/.test(hostPart.substring(colonIndex + 1));
 					}
 					const port = parsedUrl.searchParams.get('port') || 默认端口;
-					const ipItem = hasPort ? line : `${hostPart}:${port}${remark}`;
+					const ipItem = 英文化地址备注(hasPort ? line : `${hostPart}:${port}${remark}`);
 					// 处理第一个数组 - 优选IP
 					if (API备注名) {
 						const 处理后IP = ipItem.includes('#')
@@ -3035,7 +3310,7 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 						const cols = line.split(',').map(c => c.trim());
 						if (tlsIdx !== -1 && cols[tlsIdx]?.toLowerCase() !== 'true') return;
 						const wrappedIP = IPV6_PATTERN.test(cols[ipIdx]) ? `[${cols[ipIdx]}]` : cols[ipIdx];
-						const ipItem = `${wrappedIP}:${cols[portIdx]}#${cols[remarkIdx]}`;
+						const ipItem = 英文化地址备注(`${wrappedIP}:${cols[portIdx]}#${cols[remarkIdx]}`);
 						// 处理第一个数组 - 优选IP
 						if (API备注名) {
 							const 处理后IP = `${ipItem} [${API备注名}]`;
@@ -3053,7 +3328,7 @@ async function 请求优选API(urls, 默认端口 = '443', 超时时间 = 3000) 
 					dataLines.forEach(line => {
 						const cols = line.split(',').map(c => c.trim());
 						const wrappedIP = IPV6_PATTERN.test(cols[ipIdx]) ? `[${cols[ipIdx]}]` : cols[ipIdx];
-						const ipItem = `${wrappedIP}:${port}#CF Preferred ${cols[delayIdx]}ms ${cols[speedIdx]}MB/s`;
+						const ipItem = 英文化地址备注(`${wrappedIP}:${port}#CF Preferred ${cols[delayIdx]}ms ${cols[speedIdx]}MB/s`);
 						// 处理第一个数组 - 优选IP
 						if (API备注名) {
 							const 处理后IP = `${ipItem} [${API备注名}]`;
